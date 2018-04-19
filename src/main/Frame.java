@@ -9,11 +9,12 @@ import java.awt.event.KeyEvent;
 
 public class Frame implements ActionListener {
 
+    JFrame frame = new JFrame("Test");
+
     public void jFrameTest() {
-        JFrame frame = new JFrame("Test");
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        Screen screen = new Screen();
 
         JMenuBar menuBar = new JMenuBar();
         JMenu menu = new JMenu("Start");
@@ -23,8 +24,7 @@ public class Frame implements ActionListener {
         runItem.getAccessibleContext().setAccessibleDescription("This doesn't really do anything");
         runItem.addActionListener(this);
         menu.add(runItem);
-
-        frame.getContentPane().add(screen, BorderLayout.CENTER);
+        
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setJMenuBar(menuBar);
         //TODO auf true dann fullsscreen
@@ -34,6 +34,7 @@ public class Frame implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
+        RenderImage.createImage();
         System.out.println("Run pressed");
     }
 

@@ -1,20 +1,23 @@
 package main;
 
+import java.awt.image.RenderedImage;
+
 public class Main  {
 
     public static void main(String[] args)throws Exception {
-        /*
+
         fractionTest();
         System.out.println("--------------------------------------------------------------------");
         vectorTest();
         System.out.println("--------------------------------------------------------------------");
         matrixTest();
         //TODO Transponieren....
-        */
-        Frame test = new Frame();
-        test.jFrameTest();
-        ;
 
+        //Frame test = new Frame();
+        //test.jFrameTest();
+
+        RenderImage.createImage();
+        RenderImage.openImage();
     }
 
     public static void fractionTest() {
