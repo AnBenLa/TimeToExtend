@@ -11,10 +11,7 @@ public class Object {
     public boolean inView(Camera camera, int x, int y){
         for(Polygon polygon : polygons) {
             try {
-                if (camera.getPosition().add(camera.getDirection()).equals(polygon.getX())){
-                    System.out.println("Point found");
-                    return true;
-                }
+                return polygon.inView(camera, x, y);
             } catch (Exception e){
                 e.printStackTrace();
             }

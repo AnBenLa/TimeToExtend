@@ -1,30 +1,20 @@
 package main;
 
 public class Camera {
-    public Vector position;
-    public Vector direction;
+    private Gerade direction;
     public float fieldOfView;
 
     public Camera(Vector position, Vector direction, float fieldOfView) {
-        this.direction = direction;
-        this.position = position;
+        this.direction = new Gerade(position,direction);
         this.fieldOfView = fieldOfView;
     }
 
-    public Vector getDirection() {
+    public Gerade getDirection() {
         return direction;
     }
 
-    public void setDirection(Vector direction) {
+    public void setDirection(Gerade direction) {
         this.direction = direction;
-    }
-
-    public Vector getPosition() {
-        return position;
-    }
-
-    public void setPosition(Vector position) {
-        this.position = position;
     }
 
     public float getFieldOfView() {
