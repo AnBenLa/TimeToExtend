@@ -11,28 +11,9 @@ public class Main  {
         vectorTest();
         System.out.println("--------------------------------------------------------------------");
         matrixTest();
-        //TODO Transponieren....
-
-        Vector a = new Vector(new int[]{1, 0, 2});
-        Vector b = new Vector(new int[]{0, 0, -4});
-        Vector c = new Vector(new int[]{0, 1, -4});
-
-        Vector a2 = new Vector(new double[]{0, 0, 3.5});
-        Vector b2 = new Vector(new double[]{1, 0, 5});
-        Vector c2 = new Vector(new double[]{0, 1, 6});
-
-        Polygon abc = new Polygon(a,b,c);
-        Polygon abc2 = new Polygon(a2,b2,c2);
-
-
-        Camera camera = new Camera(new Vector(new int[]{2,1,3}), new Vector(new int []{0,2,1}), 90);
-        Camera camera2 = new Camera(new Vector(new int[]{2,1,3}), new Vector(new int []{0,1,0}), 90);
-        Camera camera3 = new Camera(new Vector(new int[]{9,-8,10}), new Vector(new int []{2,-2,1}), 90);
-
         System.out.println("--------------------------------------------------------------------");
-        System.out.println(abc2.inView(camera3,0,0));
-        System.out.println(abc.inView(camera,0,0));
-        System.out.println(abc.inView(camera2,0,0));
+        polygonTest();
+
         //Frame test = new Frame();
         //test.jFrameTest();
 
@@ -108,6 +89,13 @@ public class Main  {
             Matrix bM = new Matrix(new Vector[]{d, e, f});
 
             System.out.println("Matrix B: \n" + bM);
+            System.out.println("Matrix B Diag: \n" + bM.getTriangForm());
+            System.out.println("Matrix B Transponiert: \n" + bM.transpose());
+
+            Vector z = new Vector(new int[]{37,50,216});
+            System.out.println("Vector z: " + z);
+            System.out.println("Matrix B * x = z solution: \n" + bM.solveMultiplication(z) + "\n");
+
 
             System.out.println("B but instanciated by colums not rows:");
             System.out.println(new Matrix(new double[][]{{7, 6, 3}, {4, 6, 7}, {2, 66, 4}}));
@@ -128,6 +116,33 @@ public class Main  {
             System.out.println("Det B: \n" + bM.getDet());
 
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void polygonTest() throws Exception{
+        try {
+            Vector a = new Vector(new int[]{1, 0, 2});
+            Vector b = new Vector(new int[]{0, 0, -4});
+            Vector c = new Vector(new int[]{0, 1, -4});
+
+            Vector a2 = new Vector(new double[]{0, 0, 3.5});
+            Vector b2 = new Vector(new double[]{1, 0, 5});
+            Vector c2 = new Vector(new double[]{0, 1, 6});
+
+            Polygon abc = new Polygon(a, b, c);
+            Polygon abc2 = new Polygon(a2, b2, c2);
+
+            //TODO Testen!
+
+            Camera camera = new Camera(new Vector(new int[]{2, 1, 3}), new Vector(new int[]{0, 2, 1}), 90);
+            Camera camera2 = new Camera(new Vector(new int[]{2, 1, 3}), new Vector(new int[]{0, 1, 0}), 90);
+            Camera camera3 = new Camera(new Vector(new int[]{9, -8, 10}), new Vector(new int[]{2, -2, 1}), 90);
+
+            System.out.println(abc2.inView(camera3, 0, 0));
+            System.out.println(abc.inView(camera, 0, 0));
+            System.out.println(abc.inView(camera2, 0, 0));
+        } catch (Exception e){
             e.printStackTrace();
         }
     }

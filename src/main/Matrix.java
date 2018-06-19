@@ -16,9 +16,28 @@ public class Matrix {
             }
         }
 
-        Vector[] rowVectors = new Vector[values.length];
+        Vector[] rowVectors = new Vector[values[0].length];
         for (int c = 0; c < values[0].length; c++) {
             double[] row = new double[values.length];
+            for (int i = 0; i < values.length; i++) {
+                row[i] = values[i][c];
+            }
+            Vector rowVector = new Vector(row);
+            rowVectors[c] = rowVector;
+        }
+        this.rows = rowVectors;
+    }
+
+    public Matrix(Fraction[][] values) throws Exception {
+        for (Fraction[] colums : values) {
+            if (colums.length != values[0].length) {
+                throw new Exception("Could not create a new matrix");
+            }
+        }
+
+        Vector[] rowVectors = new Vector[values[0].length];
+        for (int c = 0; c < values[0].length; c++) {
+            Fraction[] row = new Fraction[values.length];
             for (int i = 0; i < values.length; i++) {
                 row[i] = values[i][c];
             }
@@ -61,7 +80,7 @@ public class Matrix {
                 this.rows[0].getVectorValues().length == additionalMatrix.getRows().length;
     }
 
-    public Matrix negate() throws Exception{
+    public Matrix negate() throws Exception {
         Vector[] newRows = new Vector[this.rows.length];
         for (int i = 0; i < newRows.length; i++) {
             newRows[i] = this.rows[i].negateValues();
@@ -121,11 +140,99 @@ public class Matrix {
         return newMatrix;
     }
 
-    public Fraction getDet() throws Exception{
-        if(squareWith(this)){
+    public Matrix getTriangForm() throws Exception {
+        Matrix transposedMatr = this.transpose();
+        for (int i = 0; i < transposedMatr.getRows()[0].getVectorValues().length; i++) {
+            Fraction tmpFactor = new Fraction(1).divide(transposedMatr.getRows()[i].getVectorValues()[i]);
+            transposedMatr.getRows()[i] = transposedMatr.getRows()[i].scalarMult(tmpFactor);
+
+            for (int c = i + 1; c < transposedMatr.getRows().length; c++) {
+                transposedMatr.getRows()[c] = transposedMatr.getRows()[c]
+                        .subtract(
+                                transposedMatr.getRows()[i].
+                                        scalarMult(
+                                                transposedMatr.getRows()[c].getVectorValues()[i]));
+
+            }
+        }
+        return transposedMatr.transpose();
+    }
+
+    public Matrix transpose() throws Exception {
+        Fraction[][] newValues = new Fraction[this.rows.length][this.rows[0].getVectorValues().length];
+        for (int i = 0; i < this.rows.length; i++) {
+            Fraction[] tmp = new Fraction[this.rows[0].getVectorValues().length];
+            for (int c = 0; c < this.rows[0].getVectorValues().length; c++) {
+                tmp[c] = this.rows[i].getVectorValues()[c];
+            }
+            newValues[i] = tmp;
+        }
+        return new Matrix(newValues);
+    }
+
+    public Matrix inverse() throws Exception {
+        //TODO implement
+        if (sameWidthAndHeight(this)) {
+            Matrix inverse = this.clone();
+        }
+        return null;
+    }
+
+    public Vector solveMultiplication(Vector result) throws Exception {
+        //TODO vereinfachen!
+        Vector tmpResult = result.clone();
+        Matrix transposedMatr = this.transpose();
+        for (int i = 0; i < transposedMatr.getRows()[0].getVectorValues().length; i++) {
+            Fraction tmpFactor = new Fraction(1).divide(transposedMatr.getRows()[i].getVectorValues()[i]);
+            transposedMatr.getRows()[i] = transposedMatr.getRows()[i].scalarMult(tmpFactor);
+            tmpResult.getVectorValues()[i] = tmpResult.getVectorValues()[i].multiply(tmpFactor);
+
+            for (int c = i + 1; c < transposedMatr.getRows().length; c++) {
+                tmpResult.getVectorValues()[c] = tmpResult.getVectorValues()[c]
+                        .subtract(
+                                tmpResult.getVectorValues()[i]
+                                        .multiply(transposedMatr.getRows()[c].getVectorValues()[i]));
+
+                transposedMatr.getRows()[c] = transposedMatr.getRows()[c]
+                        .subtract(
+                                transposedMatr.getRows()[i].
+                                        scalarMult(
+                                                transposedMatr.getRows()[c].getVectorValues()[i]));
+
+            }
+        }
+
+        int diff = transposedMatr.getRows().length - transposedMatr.getRows()[0].getVectorValues().length;
+
+        if(diff > 0){
+            int size = transposedMatr.getRows().length - diff;
+            Vector[] newVectors = new Vector[size];
+            for(int i = 0; i < size; i++){
+                newVectors[i] = transposedMatr.getRows()[i];
+            }
+            transposedMatr = new Matrix(newVectors);
+        }
+
+        for (int i = 1; i < transposedMatr.getRows()[0].getVectorValues().length; i++) {
+            for (int c = i; c < transposedMatr.getRows()[0].getVectorValues().length; c++) {
+                Fraction tmpFactor = transposedMatr.getRows()[transposedMatr.getRows().length - c - 1]
+                            .getVectorValues()[transposedMatr.getRows()[0].getVectorValues().length - i];
+                transposedMatr.getRows()[transposedMatr.getRows().length - c - 1]
+                            .getVectorValues()[transposedMatr.getRows()[0]
+                            .getVectorValues().length - i] = new Fraction(0);
+                tmpResult.getVectorValues()[transposedMatr.getRows().length - c - 1] = tmpResult.getVectorValues()[transposedMatr.getRows().length - c - 1]
+                            .subtract(tmpFactor.multiply(tmpResult.getVectorValues()[transposedMatr.getRows().length - i]));
+
+            }
+        }
+        return tmpResult;
+    }
+
+    public Fraction getDet() throws Exception {
+        if (squareWith(this)) {
             Fraction det = new Fraction(1);
             Matrix newMatrix = getTranspDiagForm();
-            for(int i = 0; i < newMatrix.rows.length; i++){
+            for (int i = 0; i < newMatrix.rows.length; i++) {
                 det.multiplyStatic(newMatrix.rows[i].fractionValues[i]);
             }
             det.simplify();
@@ -142,8 +249,8 @@ public class Matrix {
         return new Matrix(newRows);
     }
 
-    public boolean equals(Matrix additionalMatrix){
-        if(this.rows.length != additionalMatrix.getRows().length){
+    public boolean equals(Matrix additionalMatrix) {
+        if (this.rows.length != additionalMatrix.getRows().length) {
             return false;
         } else {
             for (int i = 0; i < this.rows.length; i++) {

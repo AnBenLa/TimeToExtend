@@ -7,7 +7,7 @@ public class Fraction {
 
     public Fraction(Long divident, Long divisor) throws Exception {
         if (divisor != 0) {
-            simplify(divident,divisor);
+            simplify(divident, divisor);
         } else {
             throw new Exception("Cant devide by zero");
         }
@@ -15,7 +15,7 @@ public class Fraction {
 
     public Fraction(int divident, int divisor) throws Exception {
         if (divisor != 0) {
-            simplify(divident,divisor);
+            simplify(divident, divisor);
         } else {
             throw new Exception("Cant devide by zero");
         }
@@ -32,22 +32,28 @@ public class Fraction {
         long divident = roundedValue;
         long divisor = 1000;
 
-        simplify(divident,divisor);
+        simplify(divident, divisor);
     }
 
-    public void simplify(long divident, long divisor){
+    public void simplify(long divident, long divisor) {
         long ggT = 1L;
+        if (divident < 0 && divisor < 0) {
+            divident = -divident;
+            divisor = -divisor;
+        }
         for (Long i = divisor; i > 1; i--) {
             if (divident % i == 0 && divisor % i == 0) {
                 ggT = i;
                 break;
             }
         }
-        this.divident = divident / ggT;
-        this.divisor = divisor / ggT;
+        if (divident > 0 || divisor > 0) {
+            this.divident = divident / ggT;
+            this.divisor = divisor / ggT;
+        }
     }
 
-    public void simplify(){
+    public void simplify() {
         long divident = this.divident;
         long divisor = this.divisor;
         long ggT = 1L;
@@ -57,7 +63,7 @@ public class Fraction {
                 break;
             }
         }
-        if(divident == 0){
+        if (divident == 0) {
             divisor = 1;
         }
         this.divident = divident / ggT;
@@ -78,10 +84,13 @@ public class Fraction {
     }
 
     public Fraction multiply(Fraction additionalFraction) throws Exception {
+        if(additionalFraction.divident == 0){
+            return new Fraction(0);
+        }
         return new Fraction(this.divident * additionalFraction.divident, this.divisor * additionalFraction.divisor);
     }
 
-    public void multiplyStatic(Fraction additionalFraction) throws Exception{
+    public void multiplyStatic(Fraction additionalFraction) throws Exception {
         this.divident = this.divident * additionalFraction.divident;
         this.divisor = this.divisor * additionalFraction.divisor;
     }

@@ -24,6 +24,9 @@ public class Vector {
 
     public Vector(int numberOfValues) {
         this.fractionValues = new Fraction[numberOfValues];
+        for(int i = 0; i < numberOfValues; i++){
+            this.fractionValues[i] = new Fraction(0);
+        }
     }
 
     public Fraction[] getVectorValues() {

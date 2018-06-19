@@ -13,6 +13,8 @@ public class Polygon {
         this.z = z;
     }
 
+    //TODO Bounding Box
+
     public Vector getX() {
         return x;
     }
@@ -43,10 +45,31 @@ public class Polygon {
         if(unknown.equals(new Fraction(0))){
             return false;
         }
-
         Fraction factor = reel.divide(unknown);
         Vector intersection = camera.getDirection().getPosition().add(camera.getDirection().getDirection().scalarMult(factor));
 
+        Vector xy = this.y.subtract(this.x);
+        Vector yz = this.z.subtract(this.y);
+        Vector xz = this.z.subtract(this.x);
+
+        Matrix mat = new Matrix(new Vector[]{xy, xz});
+        Matrix mat2 = new Matrix(new Vector[]{xy, yz});
+
+        Vector result1 = mat.solveMultiplication(intersection.subtract((this.x)));
+        for(Fraction value : result1.getVectorValues()){
+            if(value.getDoubleValue() < 0 || value.getDoubleValue() > 1){
+                return false;
+            }
+        }
+        Vector result2 = mat2.solveMultiplication(intersection.subtract((this.x)));
+        for(Fraction value : result2.getVectorValues()){
+            if(value.getDoubleValue() < 0 || value.getDoubleValue() > 1){
+                return false;
+            }
+        }
+
+
+        //x + xy.scalarMult(a) + xz.scalarMult(b) = intersection;
 
         return true;
     }

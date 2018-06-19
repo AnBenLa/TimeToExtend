@@ -26,28 +26,27 @@ public class RenderImage {
     }
 
     public static void renderImage(BufferedImage image) {
-        for (int i = 0; i < 1920; i++) {
-            for (int c = 0; c < 1080; c++) {
-                Camera camera = new Camera(new Vector(new int[]{2,2,2}), new Vector(new int[]{-2,-2,-2}), 90f);
-                ArrayList<Object> objects = new ArrayList<Object>();
-                objects.add(
-                        new Object(
-                            new Polygon[]{
+        Camera camera = new Camera(new Vector(new int[]{2,2,2}), new Vector(new int[]{-2,-2,-2}), 90f);
+        ArrayList<Object> objects = new ArrayList<>();
+        objects.add(
+                new Object(
+                        new Polygon[]{
                                 new Polygon(
                                         new Vector(
                                                 new int[]{0, 0, 0}
-                                                ),
+                                        ),
                                         new Vector(
                                                 new int[]{1,0,0}
-                                            ),
+                                        ),
                                         new Vector(
                                                 new int[]{0,-1,0}
-                                            )
                                         )
-                                }
-                            )
-                        );
-
+                                )
+                        }
+                )
+        );
+        for (int i = 0; i < 1920; i++) {
+            for (int c = 0; c < 1080; c++) {
                 image.setRGB(i, c, RenderImage.renderPixelRGB(i, c, camera, objects));
             }
         }
